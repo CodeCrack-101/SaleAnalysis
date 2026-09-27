@@ -14,6 +14,41 @@ st.set_page_config(
 # Custom CSS for some minor tweaks
 st.markdown("""
     <style>
+    .kpi-container {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    @media (max-width: 1024px) {
+        .kpi-container {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    @media (max-width: 768px) {
+        .kpi-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    .kpi-card {
+        background-color: transparent;
+        border-left: 4px solid #2E86C1;
+        padding: 10px 15px;
+        margin: 5px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        border-radius: 4px;
+        background-color: #ffffff;
+    }
+    .kpi-label {
+        font-size: 14px;
+        color: #555555;
+        margin-bottom: 5px;
+    }
+    .kpi-value {
+        font-size: 22px;
+        font-weight: bold;
+        color: #17202A;
+    }
     div[data-testid="stMetricValue"] {
         font-size: 1.5rem;
     }
@@ -168,18 +203,39 @@ try:
     avg_order_value = filtered_df["FinalAmount"].mean()
     total_discount = filtered_df["DiscountAmount"].sum()
     
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.metric(label="Total Orders", value=format_number(total_orders))
-        st.metric(label="Products Sold", value=format_number(total_products_sold))
-        st.metric(label="Net Sales", value=format_currency(net_sales))
-        st.metric(label="Total Discount", value=format_currency(total_discount))
-        
-    with col2:
-        st.metric(label="Total Customers", value=format_number(total_customers))
-        st.metric(label="Gross Revenue", value=format_currency(gross_revenue))
-        st.metric(label="Avg Order Value", value=format_currency(avg_order_value))
+    kpi_html = f"""
+    <div class="kpi-container">
+        <div class="kpi-card">
+            <div class="kpi-label">Total Orders</div>
+            <div class="kpi-value">{format_number(total_orders)}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Total Customers</div>
+            <div class="kpi-value">{format_number(total_customers)}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Products Sold</div>
+            <div class="kpi-value">{format_number(total_products_sold)}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Gross Revenue</div>
+            <div class="kpi-value">{format_currency(gross_revenue)}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Net Sales</div>
+            <div class="kpi-value">{format_currency(net_sales)}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Avg Order Value</div>
+            <div class="kpi-value">{format_currency(avg_order_value)}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Total Discount</div>
+            <div class="kpi-value">{format_currency(total_discount)}</div>
+        </div>
+    </div>
+    """
+    st.markdown(kpi_html, unsafe_allow_html=True)
     
     st.markdown("---")
     

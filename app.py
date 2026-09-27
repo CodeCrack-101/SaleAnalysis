@@ -1,59 +1,19 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+import plotly.express as px
 import os
-
-# Set default (white) theme for matplotlib
-plt.style.use('default')
-
 
 # Page Config
 st.set_page_config(
     page_title="Sales Analytics Dashboard",
-    page_icon="",
+    page_icon="📊",
     layout="wide"
 )
 
-# Custom CSS
+# Custom CSS for some minor tweaks
 st.markdown("""
     <style>
-    .kpi-container {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-    @media (max-width: 1024px) {
-        .kpi-container {
-            grid-template-columns: repeat(4, 1fr);
-        }
-    }
-    @media (max-width: 768px) {
-        .kpi-container {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    .kpi-card {
-        background-color: #ffffff;
-        border: 1px solid #cccccc;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 10px 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        text-align: center;
-    }
-    .kpi-label {
-        font-size: 14px;
-        color: #555555;
-        margin-bottom: 5px;
-    }
-    .kpi-value {
-        font-size: 24px;
-        font-weight: bold;
-        color: #000000;
-    }
     div[data-testid="stMetricValue"] {
         font-size: 1.5rem;
     }
@@ -118,7 +78,7 @@ try:
     merged_df = merged_df.merge(products_df, on="ProductID", how="left")
     
     # Sidebar
-    st.sidebar.title("SALES ANALYTICS")
+    st.sidebar.title("SALES ANALYTICS 📊")
     
     # Data Quality Section in Sidebar
     with st.sidebar.expander("Data Quality & Overview", expanded=False):
@@ -187,6 +147,15 @@ try:
         start_date = date_range[0]
         filtered_df = filtered_df[filtered_df["OrderDateOnly"] == start_date]
         
+    # Download Data Button
+    st.sidebar.markdown("---")
+    st.sidebar.download_button(
+        label="📥 Download Filtered Data",
+        data=filtered_df.to_csv(index=False).encode('utf-8'),
+        file_name='sales_data_filtered.csv',
+        mime='text/csv',
+    )
+        
     # Main Dashboard Title
     st.title("Sales Analytics Dashboard")
     
@@ -199,39 +168,18 @@ try:
     avg_order_value = filtered_df["FinalAmount"].mean()
     total_discount = filtered_df["DiscountAmount"].sum()
     
-    kpi_html = f"""
-    <div class="kpi-container">
-        <div class="kpi-card">
-            <div class="kpi-label">Total Orders</div>
-            <div class="kpi-value">{format_number(total_orders)}</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">Total Customers</div>
-            <div class="kpi-value">{format_number(total_customers)}</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">Products Sold</div>
-            <div class="kpi-value">{format_number(total_products_sold)}</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">Gross Revenue</div>
-            <div class="kpi-value">{format_currency(gross_revenue)}</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">Net Sales</div>
-            <div class="kpi-value">{format_currency(net_sales)}</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">Avg Order Value</div>
-            <div class="kpi-value">{format_currency(avg_order_value)}</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">Total Discount</div>
-            <div class="kpi-value">{format_currency(total_discount)}</div>
-        </div>
-    </div>
-    """
-    st.markdown(kpi_html, unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.metric(label="Total Orders", value=format_number(total_orders))
+        st.metric(label="Products Sold", value=format_number(total_products_sold))
+        st.metric(label="Net Sales", value=format_currency(net_sales))
+        st.metric(label="Total Discount", value=format_currency(total_discount))
+        
+    with col2:
+        st.metric(label="Total Customers", value=format_number(total_customers))
+        st.metric(label="Gross Revenue", value=format_currency(gross_revenue))
+        st.metric(label="Avg Order Value", value=format_currency(avg_order_value))
     
     st.markdown("---")
     
@@ -270,10 +218,8 @@ try:
         available_cols = [c for c in numeric_cols if c in filtered_df.columns]
         if available_cols and len(filtered_df) > 1:
             corr_matrix = filtered_df[available_cols].corr()
-            fig, ax = plt.subplots(figsize=(10, 6))
-            sns.heatmap(corr_matrix, annot=True, cmap="Greys", ax=ax, fmt=".2f")
-            st.pyplot(fig)
-            plt.close(fig)
+            fig = px.imshow(corr_matrix, text_auto=".2f", aspect="auto", color_continuous_scale="Blues", title="Correlation Matrix")
+            st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
         st.subheader("Monthly Sales Trend")
@@ -291,14 +237,9 @@ try:
             # Format month name for display
             monthly_sales["MonthYear"] = monthly_sales["Month"] + " " + monthly_sales["Year"].astype(str)
             
-            fig, ax = plt.subplots(figsize=(12, 5))
-            ax.plot(monthly_sales["MonthYear"], monthly_sales["FinalAmount"], marker='o', linewidth=2, color="#333333")
-            ax.fill_between(monthly_sales["MonthYear"], monthly_sales["FinalAmount"], alpha=0.2, color="#333333")
-            plt.xticks(rotation=45)
-            plt.grid(axis='y', linestyle='--', alpha=0.7)
-            plt.title("Net Sales Over Time")
-            st.pyplot(fig)
-            plt.close(fig)
+            fig = px.line(monthly_sales, x="MonthYear", y="FinalAmount", markers=True, title="Net Sales Over Time")
+            fig.update_traces(line_color="#2E86C1", fill='tozeroy')
+            st.plotly_chart(fig, use_container_width=True)
             
             # Table
             display_cols = ["MonthYear", "OrderID", "Revenue", "FinalAmount", "Previous Month Sales", "Growth Percentage"]
@@ -319,18 +260,16 @@ try:
             if not filtered_df.empty and "Category" in filtered_df.columns:
                 cat_sales = filtered_df.groupby("Category").agg({
                     "FinalAmount": "sum"
-                }).reset_index().sort_values("FinalAmount", ascending=False)
+                }).reset_index().sort_values("FinalAmount", ascending=True)
                 
                 cat_sales["Percentage of Total Revenue"] = (cat_sales["FinalAmount"] / cat_sales["FinalAmount"].sum()) * 100
                 
-                fig, ax = plt.subplots(figsize=(10, 6))
-                sns.barplot(data=cat_sales, x="FinalAmount", y="Category", color="#333333", ax=ax)
-                plt.title("Net Sales by Category")
-                st.pyplot(fig)
-                plt.close(fig)
+                fig = px.bar(cat_sales, x="FinalAmount", y="Category", orientation='h', title="Net Sales by Category")
+                fig.update_traces(marker_color="#2E86C1")
+                st.plotly_chart(fig, use_container_width=True)
                 
                 # Table
-                cat_table = cat_sales.copy()
+                cat_table = cat_sales.copy().sort_values("FinalAmount", ascending=False)
                 cat_table["FinalAmount"] = cat_table["FinalAmount"].apply(format_currency)
                 cat_table["Percentage of Total Revenue"] = cat_table["Percentage of Total Revenue"].apply(lambda x: f"{x:.2f}%")
                 cat_table.rename(columns={"FinalAmount": "Revenue"}, inplace=True)
@@ -347,16 +286,14 @@ try:
                 }).reset_index()
                 
                 prod_sales["Average Selling Price"] = prod_sales["FinalAmount"] / prod_sales["Quantity"]
-                prod_sales = prod_sales.sort_values("FinalAmount", ascending=False).head(10)
+                prod_sales = prod_sales.sort_values("FinalAmount", ascending=True).tail(10)
                 
-                fig, ax = plt.subplots(figsize=(10, 6))
-                sns.barplot(data=prod_sales, x="FinalAmount", y="Product", color="#333333", ax=ax)
-                plt.title("Top 10 Products (Net Sales)")
-                st.pyplot(fig)
-                plt.close(fig)
+                fig = px.bar(prod_sales, x="FinalAmount", y="Product", orientation='h', title="Top 10 Products (Net Sales)")
+                fig.update_traces(marker_color="#2E86C1")
+                st.plotly_chart(fig, use_container_width=True)
                 
                 # Table
-                prod_table = prod_sales.copy()
+                prod_table = prod_sales.sort_values("FinalAmount", ascending=False).copy()
                 prod_table.rename(columns={"Quantity": "Units Sold", "OrderID": "Total Orders", "FinalAmount": "Net Sales", "Revenue": "Gross Revenue"}, inplace=True)
                 prod_table["Net Sales"] = prod_table["Net Sales"].apply(format_currency)
                 prod_table["Gross Revenue"] = prod_table["Gross Revenue"].apply(format_currency)
@@ -400,11 +337,9 @@ try:
                 seg_sales["Average Customer Value"] = seg_sales["FinalAmount"] / seg_sales["CustomerID"]
                 seg_sales["Average Orders Per Customer"] = seg_sales["OrderID"] / seg_sales["CustomerID"]
                 
-                fig, ax = plt.subplots(figsize=(8, 5))
-                sns.barplot(data=seg_sales, x="OrderValueCategory", y="FinalAmount", color="#333333", ax=ax)
-                plt.title("Revenue by Segment")
-                st.pyplot(fig)
-                plt.close(fig)
+                fig = px.bar(seg_sales, x="OrderValueCategory", y="FinalAmount", title="Revenue by Segment")
+                fig.update_traces(marker_color="#2E86C1")
+                st.plotly_chart(fig, use_container_width=True)
                 
                 seg_table = seg_sales.rename(columns={"CustomerID": "Total Customers", "FinalAmount": "Total Revenue"})
                 seg_table["Total Revenue"] = seg_table["Total Revenue"].apply(format_currency)
@@ -425,15 +360,13 @@ try:
             }).reset_index()
             
             city_sales["Average Order Value"] = city_sales["FinalAmount"] / city_sales["OrderID"]
-            city_sales = city_sales.sort_values("FinalAmount", ascending=False)
+            city_sales = city_sales.sort_values("FinalAmount", ascending=True).tail(15)
             
-            fig, ax = plt.subplots(figsize=(12, 6))
-            sns.barplot(data=city_sales.head(15), x="FinalAmount", y="City", color="#333333", ax=ax)
-            plt.title("Top 15 Cities by Net Sales")
-            st.pyplot(fig)
-            plt.close(fig)
+            fig = px.bar(city_sales, x="FinalAmount", y="City", orientation='h', title="Top 15 Cities by Net Sales")
+            fig.update_traces(marker_color="#2E86C1")
+            st.plotly_chart(fig, use_container_width=True)
             
-            city_table = city_sales.rename(columns={
+            city_table = city_sales.sort_values("FinalAmount", ascending=False).rename(columns={
                 "OrderID": "Total Orders", 
                 "CustomerID": "Total Customers",
                 "Quantity": "Units Sold",
@@ -460,11 +393,8 @@ try:
             
             col1, col2 = st.columns([1, 2])
             with col1:
-                fig, ax = plt.subplots(figsize=(6, 6))
-                ax.pie(status_sales["OrderID"], labels=status_sales["OrderStatus"], autopct='%1.1f%%', startangle=90, colors=sns.color_palette("Greys_r", len(status_sales)))
-                ax.axis('equal')
-                st.pyplot(fig)
-                plt.close(fig)
+                fig = px.pie(status_sales, values="OrderID", names="OrderStatus", title="Orders by Status", hole=0.3)
+                st.plotly_chart(fig, use_container_width=True)
                 
             with col2:
                 status_table = status_sales.rename(columns={
@@ -492,11 +422,8 @@ try:
             
             col1, col2 = st.columns([1, 2])
             with col1:
-                fig, ax = plt.subplots(figsize=(6, 6))
-                ax.pie(payment_sales["OrderID"], labels=payment_sales["PaymentMethod"], autopct='%1.1f%%', startangle=90, colors=sns.color_palette("Greys_r", len(payment_sales)))
-                ax.axis('equal')
-                st.pyplot(fig)
-                plt.close(fig)
+                fig = px.pie(payment_sales, values="OrderID", names="PaymentMethod", title="Orders by Payment Method", hole=0.3)
+                st.plotly_chart(fig, use_container_width=True)
                 
             with col2:
                 payment_table = payment_sales.rename(columns={
@@ -512,4 +439,3 @@ try:
 
 except Exception as e:
     st.error(f"An unexpected error occurred during dashboard generation: {str(e)}")
-

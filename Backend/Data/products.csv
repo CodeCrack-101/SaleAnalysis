@@ -1,0 +1,105 @@
+ProductID,Product,Category,Price
+20001,Laptop 1,Electronics,63388
+20002,Laptop 2,Electronics,66297
+20003,Laptop 3,Electronics,53620
+20004,Laptop 4,Electronics,68919
+20005,Smartphone 1,Electronics,55986
+20006,Smartphone 2,Electronics,34232
+20007,Smartphone 3,Electronics,22213
+20008,Smartphone 4,Electronics,36276
+20009,Tablet 1,Electronics,18553
+20010,Tablet 2,Electronics,24340
+20011,Tablet 3,Electronics,32685
+20012,Tablet 4,Electronics,15742
+20013,Monitor 1,Electronics,24693
+20014,Monitor 2,Electronics,13717
+20015,Monitor 3,Electronics,27789
+20016,Monitor 4,Electronics,24382
+20017,Keyboard 1,Electronics,1945
+20018,Keyboard 2,Electronics,3166
+20019,Keyboard 3,Electronics,1265
+20020,Keyboard 4,Electronics,1219
+20021,Headphones 1,Electronics,11517
+20022,Headphones 2,Electronics,9827
+20023,Headphones 3,Electronics,2698
+20024,Headphones 4,Electronics,4109
+20025,Smartwatch 1,Electronics,5959
+20026,Smartwatch 2,Electronics,9415
+20027,Smartwatch 3,Electronics,7598
+20028,Smartwatch 4,Electronics,8241
+20029,Office Chair 1,Furniture,11176
+20030,Office Chair 2,Furniture,6241
+20031,Office Chair 3,Furniture,16301
+20032,Office Chair 4,Furniture,14051
+20033,Study Table 1,Furniture,16169
+20034,Study Table 2,Furniture,6711
+20035,Study Table 3,Furniture,15331
+20036,Study Table 4,Furniture,17380
+20037,Bookshelf 1,Furniture,4164
+20038,Bookshelf 2,Furniture,9637
+20039,Bookshelf 3,Furniture,5898
+20040,Bookshelf 4,Furniture,9982
+20041,Sofa 1,Furniture,36528
+20042,Sofa 2,Furniture,51100
+20043,Sofa 3,Furniture,21634
+20044,Sofa 4,Furniture,32508
+20045,Dining Table 1,Furniture,19570
+20046,Dining Table 2,Furniture,18692
+20047,Dining Table 3,Furniture,20791
+20048,Dining Table 4,Furniture,23385
+20049,T-Shirt 1,Clothing,578
+20050,T-Shirt 2,Clothing,1390
+20051,T-Shirt 3,Clothing,1170
+20052,T-Shirt 4,Clothing,1561
+20053,Jeans 1,Clothing,2733
+20054,Jeans 2,Clothing,1287
+20055,Jeans 3,Clothing,1081
+20056,Jeans 4,Clothing,1999
+20057,Jacket 1,Clothing,4302
+20058,Jacket 2,Clothing,3049
+20059,Jacket 3,Clothing,5868
+20060,Jacket 4,Clothing,4824
+20061,Sneakers 1,Clothing,7110
+20062,Sneakers 2,Clothing,2317
+20063,Sneakers 3,Clothing,7613
+20064,Sneakers 4,Clothing,3045
+20065,Shirt 1,Clothing,1731
+20066,Shirt 2,Clothing,1710
+20067,Shirt 3,Clothing,2588
+20068,Shirt 4,Clothing,1337
+20069,Mixer Grinder 1,Home & Kitchen,3824
+20070,Mixer Grinder 2,Home & Kitchen,4368
+20071,Mixer Grinder 3,Home & Kitchen,4484
+20072,Mixer Grinder 4,Home & Kitchen,3499
+20073,Air Fryer 1,Home & Kitchen,5411
+20074,Air Fryer 2,Home & Kitchen,5850
+20075,Air Fryer 3,Home & Kitchen,7740
+20076,Air Fryer 4,Home & Kitchen,6747
+20077,Cookware Set 1,Home & Kitchen,4744
+20078,Cookware Set 2,Home & Kitchen,7034
+20079,Cookware Set 3,Home & Kitchen,3686
+20080,Cookware Set 4,Home & Kitchen,8370
+20081,Vacuum Cleaner 1,Home & Kitchen,14773
+20082,Vacuum Cleaner 2,Home & Kitchen,7271
+20083,Vacuum Cleaner 3,Home & Kitchen,9080
+20084,Vacuum Cleaner 4,Home & Kitchen,7386
+20085,Water Purifier 1,Home & Kitchen,11910
+20086,Water Purifier 2,Home & Kitchen,13579
+20087,Water Purifier 3,Home & Kitchen,9356
+20088,Water Purifier 4,Home & Kitchen,7259
+20089,Face Wash 1,Beauty,507
+20090,Face Wash 2,Beauty,691
+20091,Face Wash 3,Beauty,412
+20092,Face Wash 4,Beauty,803
+20093,Perfume 1,Beauty,2351
+20094,Perfume 2,Beauty,4584
+20095,Perfume 3,Beauty,1791
+20096,Perfume 4,Beauty,3065
+20097,Hair Dryer 1,Beauty,3648
+20098,Hair Dryer 2,Beauty,1112
+20099,Hair Dryer 3,Beauty,4248
+20100,Hair Dryer 4,Beauty,2214
+20101,Skincare Kit 1,Beauty,2343
+20102,Skincare Kit 2,Beauty,2774
+20103,Skincare Kit 3,Beauty,2822
+20104,Skincare Kit 4,Beauty,778
